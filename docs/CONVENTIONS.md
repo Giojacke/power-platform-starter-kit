@@ -62,18 +62,27 @@ project folders; script file naming is already covered above.
 
 ## Publisher prefix
 
-Pending. Examples in this repo use a generic placeholder rather than a
-real organization prefix, so they stay reusable by anyone forking this repo.
+Decided: this repo's own examples and docs use a generic placeholder
+rather than a real organization prefix, so they stay reusable by anyone
+forking this repo. Each generated project picks its own real prefix via
+question 3 of [SKILL.md](../skill/SKILL.md)'s interview — see ADR-0001 and
+ADR-0002 for why that choice is irreversible once a Solution is created.
 
 ## ALM workflow — Dataverse module
 
-Pending — see [ADR-0001](adr/ADR-0001-estructura-modular-power-platform.md).
-The Dataverse module's primary ALM template targets Azure DevOps Pipelines
-(with Power Platform Build Tools), since it is the only path that supports
-full orchestration by script for this module.
+Platform decided: the Dataverse module's primary ALM template targets
+Azure DevOps Pipelines (with Power Platform Build Tools), since it's the
+only path that supports full orchestration by script for this module — see
+[ADR-0001](adr/ADR-0001-estructura-modular-power-platform.md). **Still
+pending:** the actual `pipelines/dataverse-alm.yml` template file — see
+[pipelines/README.md](../pipelines/README.md).
 
 ## ALM workflow — Power BI / Fabric module
 
-Pending — see [ADR-0001](adr/ADR-0001-estructura-modular-power-platform.md).
-This module uses PBIP + Fabric Git Integration, which is unrelated to the
-Dataverse module's ALM tooling and does not share folders or a pipeline with it.
+Platform decided: this module uses PBIP + Fabric Git Integration, which is
+unrelated to the Dataverse module's ALM tooling and shares no folders or
+pipeline with it — see
+[ADR-0001](adr/ADR-0001-estructura-modular-power-platform.md). **Still
+pending:** the actual `pipelines/powerbi-fabric.yml` template file, and the
+Fabric Git sync helper scripts mentioned in
+[scripts/powerbi/README.md](../scripts/powerbi/README.md).
