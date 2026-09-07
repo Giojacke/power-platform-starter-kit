@@ -14,10 +14,14 @@ the environment have a Dataverse database or not). Read both ADRs before
 using this skill if you haven't — they document the research behind every
 question below, including the official sources.
 
-**This skill does not execute anything real yet.** The scripts under
-`scripts/dataverse/` and `scripts/powerbi/` are still placeholders (see their
-READMEs). Wherever this skill would invoke one, it leaves a
-`# TODO: call scripts/... (pending)` marker instead of pretending to run it.
+**Only part of this skill executes anything real.** The Dataverse
+"with Solution" scripts (`auth-connect.ps1`, `solution-init.ps1`,
+`canvas-unpack.ps1`, `canvas-pack.ps1`, `solution-package.ps1` — see
+[scripts/dataverse/README.md](../scripts/dataverse/README.md)) are
+implemented and safe to call. Everything under `scripts/powerbi/` is still a
+placeholder. Wherever this skill would invoke something that doesn't exist
+yet, it leaves a `# TODO: ... (pending)` marker instead of pretending to run
+it.
 
 ## Ground rules
 
@@ -65,8 +69,13 @@ suggest they still pick a real one for their org — this repo's own examples
 use a generic placeholder precisely so nobody copies a throwaway value into
 a real environment by accident.
 
+`scripts/dataverse/solution-init.ps1` is implemented — call it once you also
+have a publisher name (`pac solution init` requires both). Default the
+publisher name to the project name from question 1 unless the user gives a
+different one:
+
 ```
-# TODO: call scripts/dataverse/solution-init.sh --publisher-prefix <prefix> (pending)
+./scripts/dataverse/solution-init.ps1 -PublisherName <name> -PublisherPrefix <prefix> -OutputDirectory src/<Solución>
 ```
 
 ### 4. What components does the project have? *(Dataverse path only)*
@@ -80,9 +89,13 @@ Both are optional subfolders of the same Solution-based tree (`CanvasApps/`
 and/or `Workflows/` under `src/<Solución>/`), not separate templates — see
 ADR-0001. Selecting both is the reference case both ADRs use.
 
+`pac solution init` has no notion of which components the solution will
+hold, so create the selected subfolders as plain empty folders yourself
+after running `solution-init.ps1`:
+
 ```
-# TODO: call scripts/dataverse/canvas-unpack.sh for each Canvas App component (pending)
-# TODO: call scripts/dataverse/solution-init.sh to scaffold Workflows/ if Power Automate is selected (pending)
+# Canvas App selected: mkdir src/<Solución>/CanvasApps (empty scaffold; populate later via canvas-unpack.ps1 once a .msapp exists)
+# Power Automate selected: mkdir src/<Solución>/Workflows (empty scaffold; pac has no dedicated flow-scaffolding command)
 ```
 
 ### 5. Does the project use Power BI?
@@ -104,7 +117,7 @@ Dataverse, Power BI, both, or neither.
   > for that manual save.
 
 ```
-# TODO: call scripts/powerbi/pbip-folder-init.sh to scaffold analytics/ (pending)
+# TODO: call scripts/powerbi/pbip-folder-init.ps1 to scaffold analytics/ (pending)
 ```
 
 ### 6. Which Dataverse environment will you connect to?
@@ -113,10 +126,13 @@ Ask for the environment URL.
 
 Then check whether an active `pac auth create` session already targets that
 environment. **If there is no active session, PAUSE here.** Do not attempt
-to simulate or fake authentication. Tell the user to run it themselves:
+to simulate or fake authentication. Tell the user to run it themselves —
+`scripts/dataverse/auth-connect.ps1` is implemented and wraps this, but it
+still opens the same interactive/MFA browser flow, so the user has to be the
+one running it, not this skill:
 
 ```
-pac auth create --environment "<environment URL>"
+./scripts/dataverse/auth-connect.ps1 -EnvironmentUrl "<environment URL>"
 ```
 
 This may require completing MFA in a browser window — something this skill
@@ -190,7 +206,7 @@ Automate UI** (export/import package). Do not tell the user this can be
 scripted with `pac` — it can't, as of this skill's writing.
 
 ```
-# TODO: call scripts/dataverse/canvas-unpack.sh for App/ (pending — this part IS automatable)
+./scripts/dataverse/canvas-unpack.ps1 -MsappPath <path to .msapp> -SourcesPath src/<NombreApp>/App
 # Flows/<NombreFlujoN>/ has no pac equivalent — document the manual UI export/import steps instead.
 ```
 
