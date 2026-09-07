@@ -46,6 +46,13 @@ or `<NombreApp>` (no-Dataverse path) in the folder structures from both
 ADRs, and the name used in `CLAUDE.md` / `.mcp.json` / `README_SETUP.md` at
 the root of the generated project.
 
+It's also the default for two things asked later, unless the user gives a
+different value when you reach them: the publisher name in question 3
+(`pac solution init` requires one), and the Solution's own folder name
+(`src/<Solución>/` in the tree below — `pac solution init` has no
+"solution name" parameter of its own, it's just the `-OutputDirectory` you
+choose).
+
 ### 2. Does the environment have — or will it have — a Dataverse database enabled?
 
 This is a real branching question (ADR-0002), asked **before** the publisher
@@ -128,9 +135,12 @@ Power BI Desktop itself:
 ./scripts/powerbi/pbip-folder-init.ps1 -Path analytics
 ```
 
-### 6. Which Dataverse environment will you connect to?
+### 6. Which Power Platform environment will you connect to?
 
-Ask for the environment URL.
+Ask for the environment URL. Call it a "Power Platform environment," not a
+"Dataverse environment" — on the no-Dataverse path (question 2 = no) this
+environment by definition has no Dataverse database, but `pac auth create`
+still needs to target it (e.g. to work with the environment's Canvas Apps).
 
 Then check whether an active `pac auth create` session already targets that
 environment. **If there is no active session, PAUSE here.** Do not attempt
@@ -168,14 +178,31 @@ Offer exactly three options:
 3. "Just the local folder for now" (no pipeline scaffolded yet)
 
 This selects which template under `pipelines/` gets copied into the
-generated project (`dataverse-alm.yml`, per ADR-0001) — or none, if option 3
-is chosen. This question is independent of question 5's Power BI
-pipeline, which always uses the Fabric-specific template when the Power BI
-module is active.
+generated project for the **Dataverse module** (`dataverse-alm.yml`, per
+ADR-0001) — or none, if option 3 is chosen. Neither `dataverse-alm.yml` nor
+its GitHub Actions equivalent exist in this repo yet (see
+[pipelines/README.md](../pipelines/README.md)), so this is unimplemented
+regardless of which option is picked — don't claim otherwise:
 
 ```
-# TODO: copy pipelines/dataverse-alm.yml (or the GitHub Actions equivalent) into the generated project (pending)
+# TODO: copy pipelines/dataverse-alm.yml (or the GitHub Actions equivalent) into the generated project (pending — template doesn't exist yet)
 ```
+
+This question is about the **Dataverse module's** pipeline specifically.
+It does not cover Power BI deployment — there is no
+`pipelines/powerbi-fabric.yml` yet either, and none gets copied
+automatically today even when the Power BI module is active:
+
+```
+# TODO: copy pipelines/powerbi-fabric.yml into the generated project when the Power BI module is active (pending — template doesn't exist yet)
+```
+
+On the no-Dataverse path (question 2 = no), option 1/2 don't have a
+matching template at all — `dataverse-alm.yml` is a Solution deployment
+pipeline (Power Platform Build Tools operate on Solutions), and this path
+has no Solution. Until a standalone-specific pipeline template exists,
+recommend option 3 for this path and say so plainly instead of implying
+either platform choice already works here.
 
 ### 9. Summary and confirmation
 
@@ -189,17 +216,21 @@ confirmation of this specific summary.
 
 ## No-Dataverse path
 
-If question 2 was answered "no," the interview skips questions 3 and 4 and
-scaffolds the standalone package structure from ADR-0002 instead:
+If question 2 was answered "no," the interview skips questions 3 and 4 as
+written for the Dataverse path — but still ask, in plain conversation, which
+of the two the project actually has (a Canvas App, Power Automate flows, or
+both). ADR-0002's structure shows both `App/` and `Flows/` together because
+that's its reference example, not because every standalone project has
+both: only create the subfolder(s) for what the project actually has.
 
 ```
 src/
 └── <NombreApp>/
-    ├── App/                    ← pac canvas unpack/pack still works here,
-    │                              it doesn't depend on Dataverse
-    ├── Flows/
-    │   ├── <NombreFlujo1>/
-    │   └── <NombreFlujo2>/
+    ├── App/                    ← if there's a Canvas App: pac canvas unpack/pack
+    │                              still works here, it doesn't depend on Dataverse
+    ├── Flows/                  ← if there's Power Automate: one subfolder per flow,
+    │   ├── <NombreFlujo1>/        named for whatever that flow actually is —
+    │   └── <NombreFlujo2>/        <NombreFlujoN> is illustrative, not literal
     └── README.md               ← documents manual reconfiguration between
                                    environments (URLs, connection IDs)
 ```
