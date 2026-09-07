@@ -17,6 +17,10 @@ Everything else the interview asks (which components, which ALM platform,
 Azure DevOps tracking) is a follow-up detail within one of those branches,
 not a structural bifurcation itself.
 
-The skill does not execute anything against `pac` yet — see
-[`SKILL.md`](SKILL.md) for the `# TODO` markers left where
-`scripts/dataverse/` and `scripts/powerbi/` will be wired in.
+The Dataverse "with Solution" scripts and the Power BI folder scaffold are
+implemented and wired into the interview — see
+[scripts/dataverse/README.md](../scripts/dataverse/README.md) and
+[scripts/powerbi/README.md](../scripts/powerbi/README.md). What's still
+missing (Fabric Git sync helpers, the `pipelines/` YAML templates, and
+writing to the generated project's `.mcp.json`) is left as `# TODO` markers
+in [`SKILL.md`](SKILL.md) rather than pretended to work.
