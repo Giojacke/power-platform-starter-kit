@@ -1,0 +1,35 @@
+# Secrets / environment
+.env
+.env.*
+*.pfx
+*.publishsettings
+credentials.json
+secrets.json
+
+# Power Platform build/test artifacts
+out/
+**/out/
+*.msapp
+!templates/**/*.msapp
+
+# pac CLI local auth/cache
+.pac/
+
+# PBIP / Fabric local artifacts
+*.pbix.bak
+.pbi/
+.fabric/
+
+# Node (in case pipeline/scripts tooling ends up needing it)
+node_modules/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Local overrides
+*.local.json
+!**/settings.local.json.example
