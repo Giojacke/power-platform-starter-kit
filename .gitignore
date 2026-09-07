@@ -20,6 +20,13 @@ out/
 .pbi/
 .fabric/
 
+# This repo is the generator, not a Power Platform project - it has no
+# legitimate top-level analytics/ or src/ of its own. Ignore them here in
+# case a contributor runs a scripts/*.ps1 wrapper from the repo root
+# without pointing it at a scratch directory first.
+/analytics/
+/src/
+
 # Node (in case pipeline/scripts tooling ends up needing it)
 node_modules/
 
