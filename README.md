@@ -23,12 +23,18 @@ ADR-0001 for the full research and reasoning behind that split.
 ## Two ways to use this repo
 
 1. **Technical / direct mode** — a developer runs the scripts under
-   [`scripts/`](scripts/) directly against the CLI (`pac`, Fabric tooling) and
-   copies the relevant templates from [`templates/`](templates/) by hand.
-2. **AI-assisted mode** — an AI agent loads the skill defined under
-   [`skill/`](skill/), runs a short discovery interview (does the project use
-   Power BI? does it have a Canvas App, a Power Automate flow, or both?), and
-   then drives the same scripts and templates on the developer's behalf.
+   [`scripts/`](scripts/) directly against the CLI (`pac`, Power BI Desktop)
+   and copies the relevant templates from [`templates/`](templates/) by hand.
+2. **AI-assisted mode** — an AI agent loads [`skill/SKILL.md`](skill/SKILL.md),
+   runs its 9-question discovery interview one question at a time, and then
+   drives the same scripts on the developer's behalf. The interview has two
+   independent branching questions — does the environment have Dataverse
+   enabled ([ADR-0002](docs/adr/ADR-0002-bifurcacion-sin-dataverse.md)), and
+   does the project use Power BI
+   ([ADR-0001](docs/adr/ADR-0001-estructura-modular-power-platform.md)) —
+   plus follow-up questions (components, target environment, Azure DevOps
+   tracking, ALM platform) and a final summary the user must confirm before
+   anything runs against a real environment.
 
 Both modes produce the same output: the module-based structure from
 ADR-0001. Neither mode is a separate template — the modules and their
@@ -47,32 +53,56 @@ power-platform-starter-kit/
 │
 ├── docs/
 │   ├── adr/
-│   │   └── ADR-0001-estructura-modular-power-platform.md
+│   │   ├── ADR-0001-estructura-modular-power-platform.md
+│   │   └── ADR-0002-bifurcacion-sin-dataverse.md
 │   └── CONVENTIONS.md
 │
 ├── templates/
 │   ├── dataverse/        ← scaffolds for the Dataverse module (Canvas Apps,
-│   │                        Power Automate, connection references)
-│   └── powerbi/          ← scaffolds for the Power BI/Fabric module (PBIP:
-│                            .Report/, .SemanticModel/)
+│   │                        Power Automate, connection references) — planned,
+│   │                        not written yet
+│   └── powerbi/          ← scaffolds for the Power BI/Fabric module — planned,
+│                            not written yet (pac can't generate PBIP anyway;
+│                            see scripts/powerbi/ below)
 │
 ├── scripts/
-│   ├── dataverse/        ← pac CLI wrapper scripts (auth, solution init,
-│   │                        canvas pack/unpack, packaging)
-│   └── powerbi/          ← Fabric/PBIP wrapper scripts
+│   ├── dataverse/        ← implemented: pac CLI wrappers for auth, solution
+│   │                        init, canvas pack/unpack, and solution packaging
+│   └── powerbi/          ← implemented: prepares the analytics/ folder for a
+│                            manual PBIP save in Power BI Desktop (no pac
+│                            command exists for that step — see ADR-0001)
 │
 ├── pipelines/            ← ALM pipeline templates: one for the Dataverse
-│                            module, one for the Power BI module
+│                            module, one for the Power BI module — planned,
+│                            not written yet
 │
-└── skill/                ← the SKILL.md discovery interview an AI agent
-                             loads to run the scaffolding interactively
+└── skill/                ← SKILL.md: the 9-question discovery interview an
+                             AI agent loads to run the scaffolding interactively
 ```
 
 ## Status
 
-Early scaffolding stage. Folder structure and placeholders are in place;
-script and skill content is being filled in incrementally. See each folder's
-`README.md` for what is planned there.
+All three scaffolding modules have working scripts, tested locally:
+
+- **Dataverse, with a Solution** — `scripts/dataverse/`: `auth-connect.ps1`,
+  `solution-init.ps1`, `canvas-unpack.ps1`, `canvas-pack.ps1`,
+  `solution-package.ps1`.
+- **Dataverse, standalone (no Solution)** — reuses `canvas-unpack.ps1` /
+  `canvas-pack.ps1` unchanged; Power Automate flows on this path have no
+  `pac` equivalent and are documented as a manual step (see ADR-0002 and
+  `SKILL.md`).
+- **Power BI / Fabric** — `scripts/powerbi/pbip-folder-init.ps1` prepares
+  `analytics/`; actually producing a PBIP project is a manual Power BI
+  Desktop step, by design (see ADR-0001).
+
+[`skill/SKILL.md`](skill/SKILL.md) wires all of the above into a single
+discovery interview.
+
+**Still missing**, tracked in each relevant folder's `README.md`:
+`templates/` scaffolds (both modules), the `pipelines/` YAML templates for
+either module, Fabric Git sync helper scripts, and writing collected answers
+into a generated project's `.mcp.json`. None of these are silently assumed
+to work — `SKILL.md` marks each with an explicit `# TODO`.
 
 ## License
 
