@@ -25,6 +25,19 @@ If a future module needs a script that doesn't make sense in PowerShell
 tool's own docs), document the exception here when it happens — don't
 silently mix scripting languages without a note.
 
+## Why the Power BI module has no pac scripts
+
+`scripts/powerbi/init-pbip-folder.ps1` is still a PowerShell script, but
+unlike everything under `scripts/dataverse/`, it doesn't wrap a `pac`
+command — because there isn't one to wrap. `pac` has no command that
+generates a PBIP project; `<Report>.Report/` and `<Report>.SemanticModel/`
+are created only by Power BI Desktop itself, via its "Power BI Project
+(.pbip) save option" preview feature (see
+[ADR-0001](adr/ADR-0001-estructura-modular-power-platform.md)). This script
+only prepares the `analytics/` folder (the official PBIP `.gitignore`
+entries plus instructions) — it can't do the save step for you, and doesn't
+pretend to.
+
 ## Naming conventions
 
 Pending — see [ADR-0001](adr/ADR-0001-estructura-modular-power-platform.md).
