@@ -25,9 +25,25 @@ If a future module needs a script that doesn't make sense in PowerShell
 tool's own docs), document the exception here when it happens — don't
 silently mix scripting languages without a note.
 
+## Script file naming
+
+Scripts under `scripts/<module>/` follow a `<domain>-<verb>.ps1` kebab-case
+pattern, where `<domain>` is the `pac` command group (or closest concept)
+the script deals with and `<verb>` is what it does to it:
+
+- `auth-connect.ps1`
+- `solution-init.ps1`
+- `solution-package.ps1`
+- `canvas-unpack.ps1` / `canvas-pack.ps1`
+- `pbip-folder-init.ps1`
+
+`_common.ps1` (leading underscore) is the one exception: it's a shared,
+dot-sourced helper file, not a script meant to be run directly, so it
+doesn't need to fit the pattern.
+
 ## Why the Power BI module has no pac scripts
 
-`scripts/powerbi/init-pbip-folder.ps1` is still a PowerShell script, but
+`scripts/powerbi/pbip-folder-init.ps1` is still a PowerShell script, but
 unlike everything under `scripts/dataverse/`, it doesn't wrap a `pac`
 command — because there isn't one to wrap. `pac` has no command that
 generates a PBIP project; `<Report>.Report/` and `<Report>.SemanticModel/`
@@ -41,6 +57,8 @@ pretend to.
 ## Naming conventions
 
 Pending — see [ADR-0001](adr/ADR-0001-estructura-modular-power-platform.md).
+This section is about naming Dataverse solutions/components and generated
+project folders; script file naming is already covered above.
 
 ## Publisher prefix
 

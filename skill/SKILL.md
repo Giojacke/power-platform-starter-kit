@@ -18,7 +18,7 @@ question below, including the official sources.
 "with Solution" scripts (`auth-connect.ps1`, `solution-init.ps1`,
 `canvas-unpack.ps1`, `canvas-pack.ps1`, `solution-package.ps1` — see
 [scripts/dataverse/README.md](../scripts/dataverse/README.md)) and the
-Power BI folder scaffold (`scripts/powerbi/init-pbip-folder.ps1` — see
+Power BI folder scaffold (`scripts/powerbi/pbip-folder-init.ps1` — see
 [scripts/powerbi/README.md](../scripts/powerbi/README.md)) are implemented
 and safe to call. Wherever this skill would invoke something that doesn't
 exist yet, it leaves a `# TODO: ... (pending)` marker instead of pretending
@@ -117,7 +117,7 @@ Dataverse, Power BI, both, or neither.
   > `.gitignore` entries and a `README.md` with step-by-step instructions
   > for that manual save.
 
-`scripts/powerbi/init-pbip-folder.ps1` is implemented — it creates
+`scripts/powerbi/pbip-folder-init.ps1` is implemented — it creates
 `analytics/`, writes the official PBIP `.gitignore`
 (`**/.pbi/localSettings.json`, `**/.pbi/cache.abf`), and drops a
 `README.md` with the exact Power BI Desktop steps. It does not create
@@ -125,7 +125,7 @@ Dataverse, Power BI, both, or neither.
 Power BI Desktop itself:
 
 ```
-./scripts/powerbi/init-pbip-folder.ps1 -Path analytics
+./scripts/powerbi/pbip-folder-init.ps1 -Path analytics
 ```
 
 ### 6. Which Dataverse environment will you connect to?

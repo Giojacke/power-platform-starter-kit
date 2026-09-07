@@ -24,9 +24,9 @@
     Overwrite an existing .gitignore/README.md in the target folder instead
     of leaving them untouched.
 .EXAMPLE
-    ./init-pbip-folder.ps1
+    ./pbip-folder-init.ps1
 .EXAMPLE
-    ./init-pbip-folder.ps1 -Path "./analytics" -Force
+    ./pbip-folder-init.ps1 -Path "./analytics" -Force
 #>
 [CmdletBinding()]
 param(

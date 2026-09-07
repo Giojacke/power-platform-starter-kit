@@ -7,7 +7,7 @@ why this folder doesn't wrap `pac` the way `scripts/dataverse/` does.
 
 Implemented:
 
-- **`init-pbip-folder.ps1`** — prepares `analytics/`: creates the folder,
+- **`pbip-folder-init.ps1`** — prepares `analytics/`: creates the folder,
   writes the official PBIP `.gitignore` (`**/.pbi/localSettings.json`,
   `**/.pbi/cache.abf`), and writes a `README.md` with the manual Power BI
   Desktop steps to actually produce `<Report>.Report/` and
